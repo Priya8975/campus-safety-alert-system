@@ -6,7 +6,7 @@ spring:
     name: alert-processing-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/campus_alerts
+    url: jdbc:postgresql://localhost:5433/campus_alerts
     username: alerts_user
     password: alerts_pass
     driver-class-name: org.postgresql.Driver
@@ -28,6 +28,8 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.fasterxml.jackson.databind.JsonNode
+        spring.json.use.type.headers: false
 
   data:
     redis:

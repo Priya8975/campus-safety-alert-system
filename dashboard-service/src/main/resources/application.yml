@@ -6,7 +6,7 @@ spring:
     name: dashboard-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/campus_alerts
+    url: jdbc:postgresql://localhost:5433/campus_alerts
     username: alerts_user
     password: alerts_pass
     driver-class-name: org.postgresql.Driver
