@@ -92,24 +92,79 @@ curl -X POST http://localhost:8081/api/alerts \
   }'
 ```
 
-## Monitoring
+### Start Frontend
 
-- **Prometheus**: http://localhost:9090
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Open http://localhost:3000
+
+## Monitoring & Observability
+
+- **Frontend Dashboard**: http://localhost:3000
+- **GraphQL Playground**: http://localhost:8080/graphiql
+- **Prometheus**: http://localhost:9091
 - **Grafana**: http://localhost:3001 (admin/admin)
+
+### Grafana Dashboard Panels
+1. **Alert Throughput** - Alerts created per minute by severity
+2. **Kafka Consumer Lag** - Per-service consumer group lag
+3. **Delivery Latency** - P50/P95/P99 delivery latency by channel
+4. **Delivery Success Rate** - Delivered vs failed by channel
+5. **WebSocket Connections** - Active subscription count
+6. **Service Health** - Up/down status for each microservice
+
+### Custom Metrics
+
+| Metric | Type | Service | Description |
+|---|---|---|---|
+| `alerts.created.count` | Counter | Ingestion | Total alerts created, tagged by severity |
+| `alerts.enriched.count` | Counter | Processing | Alerts enriched, tagged by severity |
+| `alerts.duplicate.count` | Counter | Processing | Duplicate alerts rejected |
+| `alerts.delivery.latency` | Timer | Notification | Delivery duration by channel |
+| `alerts.delivery.failure.count` | Counter | Notification | Failed deliveries by channel |
+| `websocket.connections.active` | Gauge | Dashboard | Active WebSocket subscriptions |
+
+## Testing
+
+```bash
+# Unit tests (29 tests)
+mvn test -DexcludedGroups=integration
+
+# Integration tests (requires Docker)
+mvn test -Dgroups=integration
+
+# All tests
+mvn verify
+
+# Frontend type check + build
+cd frontend && npx tsc --noEmit && npm run build
+```
+
+## CI/CD
+
+GitHub Actions pipeline runs on every push and pull request to `main`:
+- **Backend**: Maven build + unit tests with PostgreSQL and Redis service containers
+- **Frontend**: ESLint, TypeScript check, Vite production build
+- **Docker**: Builds all 5 Docker images after tests pass
 
 ## Project Structure
 
 ```
 campus-safety-alert-system/
+├── .github/workflows/ci.yml         # GitHub Actions CI pipeline
 ├── docker-compose.yml
 ├── pom.xml                          # Parent POM (multi-module)
 ├── alert-ingestion-service/         # Alert creation & Kafka producer
 ├── alert-processing-service/        # Event enrichment & processing
 ├── notification-service/            # Multi-channel notification delivery
 ├── dashboard-service/               # GraphQL API & WebSocket gateway
-├── frontend/                        # React dashboard
-├── prometheus/                      # Prometheus configuration
-└── grafana/                         # Grafana dashboard configs
+├── frontend/                        # React + TypeScript dashboard
+├── prometheus/                      # Prometheus scrape configuration
+└── grafana/                         # Grafana provisioning & dashboards
 ```
 
 ## Author
