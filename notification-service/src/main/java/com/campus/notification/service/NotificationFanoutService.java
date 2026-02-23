@@ -3,10 +3,14 @@ package com.campus.notification.service;
 import com.campus.notification.kafka.DeliveryStatusEvent;
 import com.campus.notification.kafka.DeliveryStatusProducer;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -20,15 +24,18 @@ public class NotificationFanoutService {
     private final SmsNotificationService smsService;
     private final PushNotificationService pushService;
     private final DeliveryStatusProducer deliveryStatusProducer;
+    private final MeterRegistry meterRegistry;
 
     public NotificationFanoutService(EmailNotificationService emailService,
                                       SmsNotificationService smsService,
                                       PushNotificationService pushService,
-                                      DeliveryStatusProducer deliveryStatusProducer) {
+                                      DeliveryStatusProducer deliveryStatusProducer,
+                                      MeterRegistry meterRegistry) {
         this.emailService = emailService;
         this.smsService = smsService;
         this.pushService = pushService;
         this.deliveryStatusProducer = deliveryStatusProducer;
+        this.meterRegistry = meterRegistry;
     }
 
     public void fanOut(JsonNode enrichedEvent) {
@@ -59,6 +66,18 @@ public class NotificationFanoutService {
             if (result != null) {
                 results.add(result);
                 publishDeliveryStatus(alertId, result);
+
+                Timer.builder("alerts.delivery.latency")
+                        .tag("channel", channel)
+                        .register(meterRegistry)
+                        .record(Duration.ofMillis(result.getLatencyMs()));
+
+                if (result.getFailed() > 0) {
+                    Counter.builder("alerts.delivery.failure.count")
+                            .tag("channel", channel)
+                            .register(meterRegistry)
+                            .increment(result.getFailed());
+                }
             }
         }
 

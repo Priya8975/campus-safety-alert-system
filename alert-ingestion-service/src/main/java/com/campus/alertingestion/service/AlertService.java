@@ -6,6 +6,8 @@ import com.campus.alertingestion.kafka.AlertEventProducer;
 import com.campus.alertingestion.model.Alert;
 import com.campus.alertingestion.model.AlertStatus;
 import com.campus.alertingestion.repository.AlertRepository;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,10 +24,13 @@ public class AlertService {
 
     private final AlertRepository alertRepository;
     private final AlertEventProducer alertEventProducer;
+    private final MeterRegistry meterRegistry;
 
-    public AlertService(AlertRepository alertRepository, AlertEventProducer alertEventProducer) {
+    public AlertService(AlertRepository alertRepository, AlertEventProducer alertEventProducer,
+                        MeterRegistry meterRegistry) {
         this.alertRepository = alertRepository;
         this.alertEventProducer = alertEventProducer;
+        this.meterRegistry = meterRegistry;
     }
 
     @Transactional
@@ -56,6 +61,11 @@ public class AlertService {
         );
 
         alertEventProducer.publish(event);
+
+        Counter.builder("alerts.created.count")
+                .tag("severity", saved.getSeverity().name())
+                .register(meterRegistry)
+                .increment();
 
         return saved;
     }
