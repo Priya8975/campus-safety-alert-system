@@ -47,3 +47,7 @@ grafana/data/
 
 # Redis
 dump.rdb
+
+# Build plan and learning guide (kept outside repo)
+*.docx
+Campus-Safety-Alert-System-Learning-Guide.md

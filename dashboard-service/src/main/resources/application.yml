@@ -28,6 +28,19 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.fasterxml.jackson.databind.JsonNode
+        spring.json.use.type.headers: false
+
+  graphql:
+    graphiql:
+      enabled: true
+    websocket:
+      path: /graphql
+    schema:
+      printer:
+        enabled: true
+    cors:
+      allowed-origins: "http://localhost:3000"
 
 management:
   endpoints:

@@ -1,0 +1,75 @@
+scalar DateTime
+
+type Alert {
+    id: ID!
+    title: String!
+    description: String
+    severity: Severity!
+    location: Location!
+    status: AlertStatus!
+    deliveryStats: DeliveryStats
+    createdAt: DateTime!
+    updatedAt: DateTime
+}
+
+type Location {
+    lat: Float!
+    lng: Float!
+    zone: String
+    affectedBuildings: [String!]
+}
+
+type DeliveryStats {
+    totalRecipients: Int!
+    delivered: Int!
+    failed: Int!
+    avgLatencyMs: Int!
+    byChannel: [ChannelStat!]!
+}
+
+type ChannelStat {
+    channel: String!
+    sent: Int!
+    delivered: Int!
+    failed: Int!
+    latencyMs: Int!
+}
+
+enum Severity {
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
+}
+
+enum AlertStatus {
+    ACTIVE
+    ACKNOWLEDGED
+    RESOLVED
+}
+
+input CreateAlertInput {
+    title: String!
+    description: String
+    severity: Severity!
+    lat: Float!
+    lng: Float!
+    campusZone: String
+}
+
+type Query {
+    activeAlerts: [Alert!]!
+    alert(id: ID!): Alert
+    alertHistory(zone: String, severity: Severity, limit: Int): [Alert!]!
+}
+
+type Mutation {
+    createAlert(input: CreateAlertInput!): Alert!
+    acknowledgeAlert(id: ID!): Alert!
+    resolveAlert(id: ID!): Alert!
+}
+
+type Subscription {
+    alertCreated: Alert!
+    deliveryUpdate(alertId: ID!): DeliveryStats!
+}
