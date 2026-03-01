@@ -4,7 +4,7 @@ import com.campus.alertingestion.model.Alert;
 import com.campus.alertingestion.model.AlertStatus;
 import com.campus.alertingestion.model.Severity;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 public class AlertResponse {
@@ -17,7 +17,7 @@ public class AlertResponse {
     private Double lng;
     private String campusZone;
     private AlertStatus status;
-    private Instant createdAt;
+    private OffsetDateTime createdAt;
 
     public static AlertResponse from(Alert alert) {
         AlertResponse response = new AlertResponse();
@@ -41,5 +41,5 @@ public class AlertResponse {
     public Double getLng() { return lng; }
     public String getCampusZone() { return campusZone; }
     public AlertStatus getStatus() { return status; }
-    public Instant getCreatedAt() { return createdAt; }
+    public OffsetDateTime getCreatedAt() { return createdAt; }
 }

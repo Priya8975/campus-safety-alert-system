@@ -1,7 +1,8 @@
 package com.campus.alertingestion.model;
 
 import jakarta.persistence.*;
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.UUID;
 
 @Entity
@@ -36,20 +37,20 @@ public class Alert {
     private AlertStatus status = AlertStatus.ACTIVE;
 
     @Column(name = "created_at")
-    private Instant createdAt;
+    private OffsetDateTime createdAt;
 
     @Column(name = "updated_at")
-    private Instant updatedAt;
+    private OffsetDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = Instant.now();
-        updatedAt = Instant.now();
+        createdAt = OffsetDateTime.now(ZoneOffset.UTC);
+        updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = Instant.now();
+        updatedAt = OffsetDateTime.now(ZoneOffset.UTC);
     }
 
     public Alert() {}
@@ -78,9 +79,9 @@ public class Alert {
     public AlertStatus getStatus() { return status; }
     public void setStatus(AlertStatus status) { this.status = status; }
 
-    public Instant getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
+    public OffsetDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(OffsetDateTime createdAt) { this.createdAt = createdAt; }
 
-    public Instant getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(Instant updatedAt) { this.updatedAt = updatedAt; }
+    public OffsetDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

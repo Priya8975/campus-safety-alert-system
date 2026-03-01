@@ -17,7 +17,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -141,8 +142,8 @@ class GraphQlIntegrationTest {
         alert.setLat(40.9136);
         alert.setLng(-73.1235);
         alert.setCampusZone("SAC");
-        alert.setCreatedAt(Instant.now());
-        alert.setUpdatedAt(Instant.now());
+        alert.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC));
+        alert.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC));
         return alert;
     }
 }

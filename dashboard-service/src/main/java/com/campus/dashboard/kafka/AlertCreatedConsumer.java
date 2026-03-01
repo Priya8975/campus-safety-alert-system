@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -58,8 +59,8 @@ public class AlertCreatedConsumer {
             alert.setLng(event.get("lng").asDouble());
             alert.setCampusZone(event.has("campusZone") ? event.get("campusZone").asText() : null);
             alert.setStatus(AlertStatus.ACTIVE);
-            alert.setCreatedAt(Instant.now());
-            alert.setUpdatedAt(Instant.now());
+            alert.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC));
+            alert.setUpdatedAt(OffsetDateTime.now(ZoneOffset.UTC));
             alert = alertRepository.save(alert);
             log.info("Synced alert from ingestion service [id={}]", alertId);
         }
