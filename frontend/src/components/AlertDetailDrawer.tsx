@@ -18,7 +18,7 @@ export default function AlertDetailDrawer({ alert, onClose }: AlertDetailDrawerP
   if (!alert) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-gray-900 border-l border-gray-700 shadow-2xl z-50 overflow-y-auto">
+    <div className="fixed inset-y-0 right-0 w-96 bg-gray-900 border-l border-gray-700 shadow-2xl overflow-y-auto" style={{ zIndex: 1000 }}>
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-white text-lg font-bold">Alert Details</h2>
@@ -52,7 +52,7 @@ export default function AlertDetailDrawer({ alert, onClose }: AlertDetailDrawerP
             <p className="text-gray-500 text-xs">
               {alert.location.lat.toFixed(4)}, {alert.location.lng.toFixed(4)}
             </p>
-            {alert.location.affectedBuildings.length > 0 && (
+            {(alert.location.affectedBuildings?.length ?? 0) > 0 && (
               <div className="mt-2">
                 <p className="text-gray-400 text-xs mb-1">Affected Buildings:</p>
                 <div className="flex flex-wrap gap-1">
@@ -95,7 +95,7 @@ export default function AlertDetailDrawer({ alert, onClose }: AlertDetailDrawerP
                 Avg latency: {alert.deliveryStats.avgLatencyMs}ms
               </p>
 
-              {alert.deliveryStats.byChannel.length > 0 && (
+              {(alert.deliveryStats.byChannel?.length ?? 0) > 0 && (
                 <div className="mt-3 space-y-2">
                   {alert.deliveryStats.byChannel.map((ch) => (
                     <div key={ch.channel} className="flex items-center justify-between text-xs">
@@ -105,7 +105,7 @@ export default function AlertDetailDrawer({ alert, onClose }: AlertDetailDrawerP
                       <div className="flex-1 mx-2 bg-gray-700 rounded-full h-2">
                         <div
                           className="bg-green-500 h-2 rounded-full"
-                          style={{ width: `${(ch.delivered / ch.sent) * 100}%` }}
+                          style={{ width: `${ch.sent > 0 ? (ch.delivered / ch.sent) * 100 : 0}%` }}
                         />
                       </div>
                       <span className="text-gray-400 w-16 text-right">
