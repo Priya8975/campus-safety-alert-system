@@ -149,9 +149,9 @@ class AlertIntegrationTest {
     }
 
     @Test
-    void prometheusEndpoint_shouldReturnMetrics() throws Exception {
-        mockMvc.perform(get("/actuator/prometheus"))
+    void metricsEndpoint_shouldReturnMetrics() throws Exception {
+        mockMvc.perform(get("/actuator/metrics"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("jvm_memory")));
+                .andExpect(jsonPath("$.names", hasItem("jvm.memory.used")));
     }
 }
