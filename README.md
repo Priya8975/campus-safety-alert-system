@@ -35,6 +35,43 @@ The system follows an event-driven microservices pattern with four Spring Boot s
 | Notification | 8083 | Fans out delivery across email, SMS, push channels; tracks delivery status |
 | Dashboard | 8080 | GraphQL API gateway, WebSocket connections, real-time updates |
 
+## Screenshots
+
+### Live Dashboard
+Real-time alert feed with campus map showing color-coded severity markers.
+
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Alert Details & Actions
+Click any alert to view full details, delivery stats per channel, and Acknowledge/Resolve actions.
+
+![Alert Details](docs/screenshots/alert-details.png)
+
+### Critical Alert View
+Critical alerts highlighted with delivery statistics and response actions.
+
+![Critical Alert](docs/screenshots/critical-alert.png)
+
+### Admin Panel
+Create new alerts with severity selection, campus zone, and map-based location picker.
+
+![Admin Panel](docs/screenshots/admin-panel.png)
+
+### Alert History
+Browse all alerts with severity filter buttons and status tracking.
+
+![Alert History](docs/screenshots/alert-history.png)
+
+### Severity Filter
+Filter alerts by severity level (CRITICAL, HIGH, MEDIUM, LOW).
+
+![Severity Filter](docs/screenshots/severity-filter.png)
+
+### Grafana Monitoring Dashboard
+Real-time observability with alert throughput, delivery success rates, WebSocket connections, and service health.
+
+![Grafana Dashboard](docs/screenshots/grafana-dashboard.png)
+
 ## Tech Stack
 
 | Layer | Technologies |
