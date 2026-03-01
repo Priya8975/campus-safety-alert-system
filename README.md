@@ -7,23 +7,28 @@ A distributed, event-driven microservices platform for real-time campus safety a
 The system follows an event-driven microservices pattern with four Spring Boot services communicating asynchronously through Apache Kafka.
 
 ```
-┌─────────────────┐     ┌──────────────────┐     ┌──────────────────┐
-│  Alert Ingestion │────▶│ Alert Processing  │────▶│  Notification    │
-│  Service         │     │ Service           │     │  Service         │
-│  (Port 8081)     │     │ (Port 8082)       │     │  (Port 8083)     │
-└─────────────────┘     └──────────────────┘     └──────────────────┘
-        │                        │                        │
-        ▼                        ▼                        ▼
-   alert-created           alert-enriched        alert-delivery-status
-   (Kafka Topic)           (Kafka Topic)           (Kafka Topic)
-                                                         │
-┌────────────────────────────────────────────────────────┘
-▼
-┌──────────────────┐     ┌──────────────────┐
-│  Dashboard        │────▶│  React Frontend   │
-│  Service          │     │  (Port 3000)      │
-│  (Port 8080)      │     └──────────────────┘
-└──────────────────┘
+                         Event-Driven Pipeline
+                         ====================
+
+  +--------------------+    +--------------------+    +--------------------+
+  |  Alert Ingestion   |--->|  Alert Processing  |--->|   Notification     |
+  |  Service (8081)    |    |  Service (8082)    |    |   Service (8083)   |
+  +--------------------+    +--------------------+    +--------------------+
+           |                         |                         |
+           v                         v                         v
+    [alert-created]          [alert-enriched]       [alert-delivery-status]
+      Kafka Topic              Kafka Topic               Kafka Topic
+                                                           |
+           +-----------------------------------------------+
+           |
+           v
+  +--------------------+    +--------------------+
+  |  Dashboard         |--->|  React Frontend    |
+  |  Service (8080)    |    |  (Port 3000)       |
+  |  GraphQL + WS      |    |  Apollo + Leaflet  |
+  +--------------------+    +--------------------+
+
+  Infrastructure: PostgreSQL 16 | Redis 7 | Kafka (3 brokers) | Prometheus | Grafana
 ```
 
 ### Services
